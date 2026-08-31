@@ -3,149 +3,86 @@
 
 <head>
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width,
-             initial-scale=1.0,
-             maximum-scale=1.0,
-             user-scalable=no"
-  >
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Location Based WebAR</title>
-
-  <!-- =========================================
-       A-Frame 1.6.0
-       ========================================= -->
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-
-  <!-- =========================================
-       AR.js 3.4.x
-       ========================================= -->
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-
-
   <style>
     html,
     body {
       margin: 0;
       padding: 0;
-
       width: 100%;
       height: 100%;
-
       overflow: hidden;
-
       font-family: sans-serif;
     }
-
     #info {
       position: fixed;
-
       z-index: 1000;
-
       top: 10px;
       left: 10px;
       right: 10px;
-
       padding: 12px;
-
       color: white;
-
       background: rgba(0, 0, 0, 0.65);
-
       border-radius: 8px;
-
       font-size: 14px;
-
       line-height: 1.5;
-
       pointer-events: none;
     }
   </style>
-
 </head>
-
-
 <body>
-
-
-  <!-- =========================================
-       GPS情報表示
-       ========================================= -->
-
+  <!-- ==  GPS情報表示 == -->
   <div id="info">
     GPS位置情報を取得しています…
   </div>
-
-
-  <!-- =========================================
-       A-Frame Scene
-       ========================================= -->
-
+  <!-- ==  A-Frame Scene == -->
   <a-scene
-
     vr-mode-ui="enabled: false"
-
     embedded
-
     renderer="
       antialias: true;
       alpha: true;
     "
-
     arjs="
       sourceType: webcam;
       videoTexture: true;
       debugUIEnabled: false;
     "
   >
-
-
-    <!-- =======================================
-         ARスポット
-         =======================================
-
+    <!-- == ARスポット =====
+=====
          latitude
            緯度
-
          longitude
            経度
-
          ↓↓↓
          実際に表示したい場所に変更
          ======================================= -->
 
     <a-entity
       id="ar-spot"
-
       gps-new-entity-place="
-        latitude: 35.4658;
-        longitude: 139.6223;
+        latitude: 31.251445;
+        longitude: 131.076299;
       "
     >
-
-
       <!-- =====================================
            ARオブジェクト
-
            高さ 1m の位置に表示
            ===================================== -->
-
       <a-box
-
         position="0 1 0"
-
         width="2"
         height="2"
         depth="2"
-
         material="
           color: #00ffff;
           opacity: 0.8;
           transparent: true;
         "
-
         animation="
           property: rotation;
           to: 0 360 0;
@@ -155,68 +92,42 @@
         "
       >
       </a-box>
-
-
       <!-- =====================================
            ARラベル
            ===================================== -->
-
       <a-text
-
         value="AR SPOT"
-
         position="0 3 0"
-
         align="center"
-
         color="white"
-
         scale="5 5 5"
-
         look-at="[gps-new-camera]"
       >
       </a-text>
-
-
     </a-entity>
-
-
     <!-- =========================================
          GPS Camera
          ========================================= -->
-
     <a-camera
-
       id="camera"
-
       gps-new-camera="
         gpsMinDistance: 5;
       "
-
       rotation-reader
     >
     </a-camera>
-
-
   </a-scene>
-
-
   <!-- =========================================
        JavaScript
        ========================================= -->
-
   <script>
-
     const info =
       document.getElementById("info");
-
-
     /*
      * =========================================
      * GPS位置情報更新
      * =========================================
      */
-
     window.addEventListener(
       "gps-camera-update-position",
       function (event) {
@@ -227,77 +138,49 @@
         ) {
           return;
         }
-
-
         const position =
           event.detail.position;
-
-
         const latitude =
           position.latitude;
-
         const longitude =
           position.longitude;
-
-
         info.innerHTML =
           "現在位置<br>" +
-
           "緯度: " +
           latitude.toFixed(6) +
-
           "<br>" +
-
           "経度: " +
           longitude.toFixed(6);
-
       }
     );
-
-
     /*
      * =========================================
      * GPSエラー
      * =========================================
      */
-
     window.addEventListener(
       "gps-camera-error",
       function () {
-
         info.innerHTML =
           "GPSを取得できませんでした。<br>" +
           "位置情報の利用を許可してください。";
-
       }
     );
-
-
     /*
      * =========================================
      * ARオブジェクト配置完了
      * =========================================
      */
-
     const arSpot =
       document.getElementById("ar-spot");
-
-
     arSpot.addEventListener(
       "gps-entity-place-added",
       function () {
-
         console.log(
           "AR Spot added"
         );
-
       }
     );
-
-
   </script>
-
-
 </body>
-
 </html>
